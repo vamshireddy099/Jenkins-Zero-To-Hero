@@ -10,7 +10,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Checkout the code from the version control system
-                git 'https://github.com/your-repository/your-java-app.git'
+               git branch: 'main', url: 'https://github.com/vamshireddy099/Jenkins-Zero-To-Hero'
             }
         }
 
