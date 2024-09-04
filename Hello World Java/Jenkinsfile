@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         // Define any environment variables here, if needed
-        JAVA_HOME = tool name: 'JDK11', type: 'jdk'
+        JAVA_HOME = tool name: 'JDK17', type: 'jdk'
     }
 
     stages {
