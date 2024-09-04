@@ -1,0 +1,70 @@
+pipeline {
+    agent any
+
+    environment {
+        // Define any environment variables here, if needed
+        JAVA_HOME = tool name: 'JDK11', type: 'jdk'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                // Checkout the code from the version control system
+                git 'https://github.com/your-repository/your-java-app.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                script {
+                    // Use Maven to build the project
+                    sh '${MAVEN_HOME}/bin/mvn clean install'
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                script {
+                    // Run unit tests using Maven
+                    sh '${MAVEN_HOME}/bin/mvn test'
+                }
+            }
+            post {
+                always {
+                    // Archive test results
+                    junit '**/target/surefire-reports/*.xml'
+                }
+            }
+        }
+
+        stage('Package') {
+            steps {
+                script {
+                    // Package the application (create a JAR/WAR file)
+                    sh '${MAVEN_HOME}/bin/mvn package'
+                }
+            }
+        }
+
+        stage('Deploy') {
+            when {
+                branch 'main' // Only deploy from the main branch
+            }
+            steps {
+                script {
+                    // Deploy the application to your environment
+                    // This is an example and should be customized based on your deployment strategy
+                    sh 'scp target/your-app.jar user@your-server:/path/to/deploy'
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            // Clean up workspace after the build
+            cleanWs()
+        }
+    }
+}
